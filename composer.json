@@ -1,0 +1,17 @@
+{
+    "name":         "Yapte",
+    "description":  "Unknown",
+    "minimum-stability": "dev",
+    "repositories": [
+    ],
+    "require":      {
+    },
+    "autoload": {
+        "psr-0": {
+            "Yapte": "src/php/"
+        }
+    },
+    "config":       {
+        "vendor-dir": "src/library"
+    }
+}
