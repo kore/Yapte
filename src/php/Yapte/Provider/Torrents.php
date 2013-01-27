@@ -12,7 +12,7 @@ namespace Yapte\Provider;
  *
  * @version $Revision$
  */
-class Torrents
+interface Torrents
 {
     /**
      * Get torrents for episode

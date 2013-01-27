@@ -12,6 +12,6 @@ namespace Yapte;
  *
  * @version $Revision$
  */
-class Provider implements Provider\Listing, Provider\Episodes, Provider\Torrents
+abstract class Provider implements Provider\Listing, Provider\Episodes, Provider\Torrents
 {
 }

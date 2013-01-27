@@ -12,7 +12,7 @@ namespace Yapte\Provider;
  *
  * @version $Revision$
  */
-class Listing
+interface Listing
 {
     /**
      * Get show list
