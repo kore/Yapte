@@ -42,9 +42,10 @@ abstract class Struct
      * Disabled setter
      *
      * @param string $name
+     * @param mixed $name
      * @return void
      */
-    public function __set($name)
+    public function __set($name, $value)
     {
         throw new \OutOfRangeException("Unknown property \${$name}.");
     }
