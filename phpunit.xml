@@ -1,0 +1,17 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         bootstrap="src/library/autoload.php"
+         syntaxCheck="false"
+         strict="true">
+
+    <filter>
+      <whitelist>
+          <directory suffix=".php">src/php/</directory>
+      </whitelist>
+  </filter>
+</phpunit>
