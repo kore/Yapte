@@ -31,8 +31,13 @@ class EztvTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFoo()
+    public function testGetShowList()
     {
         $provider = new Eztv($this->getHttpClient());
+        $shows = $provider->getShowList();
+        $this->assertEquals(
+            array(),
+            $shows
+        );
     }
 }

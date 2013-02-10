@@ -35,6 +35,19 @@ class Eztv extends Provider
         $this->httpClient = $httpClient;
     }
 
+    protected function getDomDocument($url)
+    {
+        $errorReporting = libxml_use_internal_errors(true);
+
+        $doc = new \DOMDocument();
+        $doc->loadHtml($this->httpClient->request("GET", $url)->body);
+
+        libxml_clear_errors();
+        libxml_use_internal_errors($errorReporting);
+
+        return $doc;
+    }
+
     /**
      * Get show list
      *
@@ -42,7 +55,21 @@ class Eztv extends Provider
      */
     public function getShowList()
     {
-        throw new \RuntimeException("@TODO: Implement.");
+        $html = $this->getDomDocument("http://eztv.it/showlist/");
+        $xpath = new \DOMXPath($html);
+
+        $shows = array();
+        $showLinks = $xpath->query('//a[@class="thread_link"]');
+        for ($i = 0; $i < $showLinks->length; ++$i) {
+            $showLink = $showLinks->item($i);
+            $shows[] = new Show(
+                array(
+                    'name' => $showLink->textContent,
+                    'internalId' => 'http://eztv.it' . $showLink->getAttribute('href'),
+                )
+            );
+        }
+        return $shows;
     }
 
     /**

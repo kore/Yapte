@@ -53,8 +53,8 @@ class Stream extends HttpClient
             ),
         );
 
-        $httpFilePointer = @fopen(
-            $this->server . $path,
+        $httpFilePointer = fopen(
+            $url,
             'r',
             false,
             stream_context_create($contextOptions)
@@ -62,7 +62,7 @@ class Stream extends HttpClient
 
         // Check if connection has been established successfully
         if ($httpFilePointer === false) {
-            throw new CommunicationException($this->server, $path, $method);
+            throw new CommunicationException($url, $method);
         }
 
         // Read request body
@@ -98,10 +98,10 @@ class Stream extends HttpClient
     /**
      * Parse raw headers
      *
-     * @param array $rawHeaders
+     * @param array $metaData
      * @return array
      */
-    protected function parseHeaders(array $rawHeaders)
+    protected function parseHeaders(array $metaData)
     {
         $rawHeaders = isset($metaData['wrapper_data']['headers']) ?
             $metaData['wrapper_data']['headers'] :
@@ -117,6 +117,8 @@ class Stream extends HttpClient
                 $headers[strtolower($key)] = ltrim($value);
             }
         }
+
+        return $headers;
     }
 
     /**
@@ -155,7 +157,7 @@ class Stream extends HttpClient
     {
         $requestHeaders = '';
 
-        foreach ($this->headers as $name => $value) {
+        foreach ($headers as $name => $value) {
             if (!isset($headers[$name])) {
                 $requestHeaders .= "$name: $value\r\n";
             }
