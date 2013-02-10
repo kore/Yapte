@@ -7,12 +7,14 @@
 
 namespace Yapte\HttpClient;
 
+use Yapte\Struct;
+
 /**
  * Provider base class
  *
  * @version $Revision$
  */
-class Message
+class Message extends Struct
 {
     /**
      * Response headers
