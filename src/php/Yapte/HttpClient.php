@@ -24,5 +24,5 @@ abstract class HttpClient
      * @param HttpClient\Message $message
      * @return HttpClient\Message
      */
-    abstract public function request($method, $path, Message $message = null);
+    abstract public function request($method, $path, HttpClient\Message $message = null);
 }

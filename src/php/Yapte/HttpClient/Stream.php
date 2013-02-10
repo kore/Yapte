@@ -14,7 +14,7 @@ use Yapte\HttpClient;
  *
  * @version $Revision$
  */
-class Stream implements HttpClient
+class Stream extends HttpClient
 {
     /**
      * Default URL values
