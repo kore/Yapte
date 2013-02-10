@@ -9,9 +9,15 @@
          syntaxCheck="false"
          strict="true">
 
-    <filter>
-      <whitelist>
-          <directory suffix=".php">src/php/</directory>
-      </whitelist>
+  <testsuites>
+    <testsuite name="Tests">
+      <directory>test/</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist>
+        <directory suffix=".php">src/php/</directory>
+    </whitelist>
   </filter>
 </phpunit>
