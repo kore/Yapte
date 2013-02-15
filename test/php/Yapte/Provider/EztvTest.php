@@ -7,7 +7,7 @@
 
 namespace Yapte\Provider;
 
-use Yapte\HttpClient;
+require __DIR__ . '/TestCase.php';
 
 /**
  * Tests for the Eztv provider
@@ -15,29 +15,43 @@ use Yapte\HttpClient;
  * @covers \Yapte\Provider\Eztv
  * @group unittest
  */
-class EztvTest extends \PHPUnit_Framework_TestCase
+class EztvTest extends TestCase
 {
-    /**
-     * Get test HTTP Client
-     *
-     * @return HttpClient
-     */
-    protected function getHttpClient()
-    {
-        return new HttpClient\Caching(
-            new HttpClient\Stream(),
-            __DIR__ . '/_dump/',
-            86400
-        );
-    }
-
     public function testGetShowList()
     {
         $provider = new Eztv($this->getHttpClient());
         $shows = $provider->getShowList();
-        $this->assertEquals(
-            array(),
-            $shows
+
+        $this->assertTrue(is_array($shows));
+        return $shows;
+    }
+
+    /**
+     * @depends testGetShowList
+     */
+    public function testGetShowListNotEmpty($shows)
+    {
+        $this->assertTrue(count($shows) > 1);
+    }
+
+    /**
+     * @depends testGetShowList
+     */
+    public function testGetShowListItemType($shows)
+    {
+        $this->assertTrue(
+            array_reduce(
+                array_map(
+                    function ($show) {
+                        return $show instanceof Show;
+                    },
+                    $shows
+                ),
+                function ($a, $b) {
+                    return $a && $b;
+                },
+                true
+            )
         );
     }
 }
