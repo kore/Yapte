@@ -96,4 +96,63 @@ class TheTVDBTest extends TestCase
 
         $provider->getShowList(array('The'));
     }
+
+    /**
+     * @depends testGetShowListSingleItem
+     */
+    public function testGetEpisodes($shows)
+    {
+        $provider = new TheTVDB(
+            $this->getHttpClient(),
+            $this->getTestConfiguration()->thetvdb['apiKey']
+        );
+        $episodes = $provider->getEpisodeList($shows[0]);
+
+        $this->assertTrue(is_array($episodes));
+        return $episodes;
+    }
+
+    /**
+     * @depends testGetEpisodes
+     */
+    public function testGetEpisodeTypes(array $episodes)
+    {
+        $this->assertTrue(
+            array_reduce(
+                array_map(
+                    function ($show) {
+                        return $show instanceof Episode;
+                    },
+                    $episodes
+                ),
+                function ($a, $b) {
+                    return $a && $b;
+                },
+                true
+            )
+        );
+
+        return $episodes;
+    }
+
+    public function getEpisodeValues()
+    {
+        return array(
+            array('title', 'Pilot'),
+            array('season', 1),
+            array('episode', 1),
+        );
+    }
+
+    /**
+     * @depends testGetEpisodeTypes
+     * @dataProvider getEpisodeValues
+     */
+    public function testGetEpisodeValues($key, $value, array $episodes)
+    {
+        $this->assertEquals(
+            $value,
+            $episodes[0]->$key
+        );
+    }
 }

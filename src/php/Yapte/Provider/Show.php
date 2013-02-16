@@ -29,4 +29,11 @@ class Show extends Struct
      * @var string
      */
     public $name;
+
+    /**
+     * Episodes
+     *
+     * @var Episode[]
+     */
+    public $episodes;
 }

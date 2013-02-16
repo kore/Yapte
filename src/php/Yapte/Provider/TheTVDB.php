@@ -112,7 +112,49 @@ class TheTVDB extends Provider
      */
     public function getEpisodeList(Show $show)
     {
-        throw new \RuntimeException("@TODO: Implement.");
+        $showData = $this->getShowLanguageXml($show);
+        return array_values(array_filter(
+            array_map(
+                function (\DOMElement $episodeNode) {
+                    return new Episode(array(
+                        'internalId' => $episodeNode->getElementsByTagName('id')->item(0)->textContent,
+                        'title' => $episodeNode->getElementsByTagName('EpisodeName')->item(0)->textContent,
+                        'season' => $episodeNode->getElementsByTagName('SeasonNumber')->item(0)->textContent,
+                        'episode' => $episodeNode->getElementsByTagName('EpisodeNumber')->item(0)->textContent,
+                    ));
+                },
+                $this->queryXPath($showData, '//Episode')
+            ),
+            function (Episode $episode) {
+                return $episode->season > 0;
+            }
+        ));
+    }
+
+    /**
+     * Get language XML file for the given show
+     *
+     * @param Show $show
+     * @return \DOMDocument
+     */
+    protected function getShowLanguageXml(Show $show)
+    {
+        $archiveFileName = __DIR__ . '/../../../var/tvdb_' . $show->internalId . '.zip';
+        if (!is_file($archiveFileName) ||
+            filemtime($archiveFileName) < (time() - 3600)) {
+            $response = $this->httpClient->request(
+                "GET",
+                $this->getMirror() . "/api/{$this->apiKey}/series/{$show->internalId}/all/{$this->language}.zip"
+            );
+            file_put_contents($archiveFileName, $response->body);
+        }
+
+        $archive = new \ZipArchive();
+        $archive->open($archiveFileName);
+
+        $showData = new \DOMDocument();
+        $showData->loadXml($archive->getFromName($this->language . ".xml"));
+        return $showData;
     }
 
     /**
