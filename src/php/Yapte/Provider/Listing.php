@@ -17,7 +17,8 @@ interface Listing
     /**
      * Get show list
      *
+     * @param array $showNames
      * @return Show[]
      */
-    public function getShowList();
+    public function getShowList(array $showNames);
 }

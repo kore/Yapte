@@ -51,9 +51,10 @@ class Eztv extends Provider
     /**
      * Get show list
      *
+     * @param array $showNames
      * @return Show[]
      */
-    public function getShowList()
+    public function getShowList(array $showNames)
     {
         $html = $this->getDomDocument("http://eztv.it/showlist/");
         $xpath = new \DOMXPath($html);
