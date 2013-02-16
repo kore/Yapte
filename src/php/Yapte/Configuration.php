@@ -42,10 +42,10 @@ class Configuration
     {
         if (!is_file($iniFile) &&
             is_file($iniFile . '.dist')) {
-            $iniFile = $iniFile . '.dist';
+            $this->parseIniFile($iniFile . '.dist', $environment);
+        } else {
+            $this->parseIniFile($iniFile, $environment);
         }
-
-        $this->parseIniFile($iniFile, $environment);
 
         if (is_file($iniFile . '.local')) {
             $this->parseIniFile($iniFile . '.local', $environment);
@@ -62,7 +62,9 @@ class Configuration
     public function parseIniFile($iniFile, $environment = 'production')
     {
         // Suppress errors about "invalid" comments
-        $configuration = @parse_ini_file($iniFile, true);
+        $old = error_reporting(error_reporting() & ~E_DEPRECATED);
+        $configuration = parse_ini_file($iniFile, true);
+        error_reporting($old);
 
         if (false === isset($configuration[$environment])) {
             throw new \UnexpectedValueException("Unknown environment $environment.");
