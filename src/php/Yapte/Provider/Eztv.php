@@ -48,6 +48,26 @@ class Eztv extends Provider
         return $doc;
     }
 
+    protected function getAllShows()
+    {
+        $html = $this->getDomDocument("http://eztv.it/showlist/");
+        $xpath = new \DOMXPath($html);
+
+        $shows = array();
+        $showLinks = $xpath->query('//a[@class="thread_link"]');
+        for ($i = 0; $i < $showLinks->length; ++$i) {
+            $link = 'http://eztv.it' . $showLinks->item($i)->getAttribute('href');
+            $name = $showLinks->item($i)->textContent;
+
+            if (preg_match('(^(.*),\\s+(.*)$)', $name, $matches)) {
+                $name = $matches[2] . ' ' . $matches[1];
+            }
+
+            $shows[$link] = $name;
+        }
+        return $shows;
+    }
+
     /**
      * Get show list
      *
@@ -56,20 +76,31 @@ class Eztv extends Provider
      */
     public function getShowList(array $showNames)
     {
-        $html = $this->getDomDocument("http://eztv.it/showlist/");
-        $xpath = new \DOMXPath($html);
-
+        $allShows = $this->getAllShows();
         $shows = array();
-        $showLinks = $xpath->query('//a[@class="thread_link"]');
-        for ($i = 0; $i < $showLinks->length; ++$i) {
-            $showLink = $showLinks->item($i);
-            $shows[] = new Show(
-                array(
-                    'name' => $showLink->textContent,
-                    'internalId' => 'http://eztv.it' . $showLink->getAttribute('href'),
-                )
+        foreach ($showNames as $showName)
+        {
+            $showDistances = array_map(
+                function ($name) use ($showName) {
+                    return levenshtein($name, $showName);
+                },
+                $allShows
             );
+
+            asort($showDistances, SORT_NUMERIC);
+
+            if (reset($showDistances) > 2) {
+                throw new \OutOfRangeException(
+                    "Show $showName not found; Closest matches: " . implode(", ", array_slice(array_keys($showDistances), 0, 10))
+                );
+            }
+
+            $shows[] = new Show(array(
+                'name' => $showName,
+                'internalId' => key($showDistances),
+            ));
         }
+
         return $shows;
     }
 

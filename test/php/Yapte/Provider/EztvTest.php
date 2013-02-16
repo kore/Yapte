@@ -20,38 +20,47 @@ class EztvTest extends TestCase
     public function testGetShowList()
     {
         $provider = new Eztv($this->getHttpClient());
-        $shows = $provider->getShowList();
+        $shows = $provider->getShowList(array('The Mentalist'));
 
-        $this->assertTrue(is_array($shows));
+        $this->assertEquals(
+            array(
+                new Show(array(
+                    'name' => 'The Mentalist',
+                    'internalId' => 'http://eztv.it/shows/179/the-mentalist/',
+                ))
+            ),
+            $shows
+        );
+        return $shows;
+    }
+
+    public function testGetMultipleShows()
+    {
+        $provider = new Eztv($this->getHttpClient());
+        $shows = $provider->getShowList(array('The Mentalist', 'House'));
+
+        $this->assertEquals(
+            array(
+                new Show(array(
+                    'name' => 'The Mentalist',
+                    'internalId' => 'http://eztv.it/shows/179/the-mentalist/',
+                )),
+                new Show(array(
+                    'name' => 'House',
+                    'internalId' => 'http://eztv.it/shows/124/house/',
+                ))
+            ),
+            $shows
+        );
         return $shows;
     }
 
     /**
-     * @depends testGetShowList
+     * @expectedException \OutOfRangeException
      */
-    public function testGetShowListNotEmpty($shows)
+    public function testGetShowVagueName()
     {
-        $this->assertTrue(count($shows) > 1);
-    }
-
-    /**
-     * @depends testGetShowList
-     */
-    public function testGetShowListItemType($shows)
-    {
-        $this->assertTrue(
-            array_reduce(
-                array_map(
-                    function ($show) {
-                        return $show instanceof Show;
-                    },
-                    $shows
-                ),
-                function ($a, $b) {
-                    return $a && $b;
-                },
-                true
-            )
-        );
+        $provider = new Eztv($this->getHttpClient());
+        $provider->getShowList(array('The'));
     }
 }
