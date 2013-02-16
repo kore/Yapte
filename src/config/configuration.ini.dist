@@ -1,0 +1,12 @@
+[production]
+
+; API Key for TheTVDB.com
+;
+; Get one at: http://thetvdb.com/?tab=apiregister
+;thetvdb.apiKey = 
+
+; List of shows, you want to follow
+shows[] = 
+
+; Language for show titles, etc.
+language = en
