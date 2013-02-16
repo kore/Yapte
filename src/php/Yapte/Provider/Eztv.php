@@ -9,6 +9,7 @@ namespace Yapte\Provider;
 
 use Yapte\Provider;
 use Yapte\HttpClient;
+use Yapte\NameMatcher;
 
 /**
  * Provider based on eztv.it
@@ -25,14 +26,22 @@ class Eztv extends Provider implements Provider\Torrents
     protected $httpClient;
 
     /**
+     * Name matcher
+     *
+     * @var NameMatcher
+     */
+    protected $nameMatcher;
+
+    /**
      * Construct from dependecies
      *
      * @param HttpClient $httpClient
      * @return void
      */
-    public function __construct(HttpClient $httpClient)
+    public function __construct(HttpClient $httpClient, NameMatcher $nameMatcher)
     {
         $this->httpClient = $httpClient;
+        $this->nameMatcher = $nameMatcher;
     }
 
     protected function getDomDocument($url)
@@ -111,7 +120,24 @@ class Eztv extends Provider implements Provider\Torrents
      */
     public function getEpisodeList(Show $show)
     {
-        throw new \RuntimeException("@TODO: Implement.");
+        $html = $this->getDomDocument($show->internalId);
+        $xpath = new \DOMXPath($html);
+
+        $episodes = array();
+        $episodeLinks = $xpath->query('//a[@class="epinfo"]');
+        for ($i = 0; $i < $episodeLinks->length; ++$i) {
+            $title = $episodeLinks->item($i)->getAttribute('title');
+
+            $episodes[] = $episode = $this->nameMatcher->parse($title);
+
+            $torrentLinks = $xpath->query('/../..//a[contains(@class, "download_")]');
+            for ($j = 0; $j < $torrentLinks->length; ++$j) {
+                $episode->torrents[] = new Torrent(array(
+                    'url' => $torrentLinks->item($j)->getAttribute('href'),
+                ));
+            }
+        }
+        return array_reverse($episodes);
     }
 
     /**
