@@ -39,10 +39,12 @@ class RegExp extends NameMatcher
         $episode = false;
         foreach ($this->episodeRegExps as $regExp) {
             if (preg_match($regExp, $string, $matches)) {
-                $episode = new Episode(array(
-                    'season' => (int) $matches['season'],
-                    'episode' => (int) $matches['episode'],
-                ));
+                $episode = new Episode(
+                    array(
+                        'season' => (int) $matches['season'],
+                        'episode' => (int) $matches['episode'],
+                    )
+                );
                 break;
             }
         }

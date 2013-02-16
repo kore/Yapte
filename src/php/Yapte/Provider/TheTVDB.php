@@ -71,10 +71,12 @@ class TheTVDB extends Provider
         return array_map(
             function ($show) {
                 $showInfo = new \DOMDocument();
-                $showInfo->loadXml($this->httpClient->request(
-                    "GET",
-                    $url = "http://www.thetvdb.com/api/GetSeries.php?seriesname=" . urlencode($show)
-                )->body);
+                $showInfo->loadXml(
+                    $this->httpClient->request(
+                        "GET",
+                        "http://www.thetvdb.com/api/GetSeries.php?seriesname=" . urlencode($show)
+                    )->body
+                );
 
                 $showElement = $this->queryXPath(
                     $showInfo,
@@ -96,10 +98,12 @@ class TheTVDB extends Provider
                     );
                 }
 
-                return new Show(array(
-                    'internalId' => $this->queryXPath($showInfo, './parent::*/id', $showElement[0])[0]->textContent,
-                    'name' => $showElement[0]->textContent
-                ));
+                return new Show(
+                    array(
+                        'internalId' => $this->queryXPath($showInfo, './parent::*/id', $showElement[0])[0]->textContent,
+                        'name' => $showElement[0]->textContent
+                    )
+                );
             },
             $showNames
         );
@@ -113,22 +117,26 @@ class TheTVDB extends Provider
     public function getEpisodeList(Show $show)
     {
         $showData = $this->getShowLanguageXml($show);
-        return array_values(array_filter(
-            array_map(
-                function (\DOMElement $episodeNode) {
-                    return new Episode(array(
-                        'internalId' => $episodeNode->getElementsByTagName('id')->item(0)->textContent,
-                        'title' => $episodeNode->getElementsByTagName('EpisodeName')->item(0)->textContent,
-                        'season' => $episodeNode->getElementsByTagName('SeasonNumber')->item(0)->textContent,
-                        'episode' => $episodeNode->getElementsByTagName('EpisodeNumber')->item(0)->textContent,
-                    ));
-                },
-                $this->queryXPath($showData, '//Episode')
-            ),
-            function (Episode $episode) {
-                return $episode->season > 0;
-            }
-        ));
+        return array_values(
+            array_filter(
+                array_map(
+                    function (\DOMElement $episodeNode) {
+                        return new Episode(
+                            array(
+                                'internalId' => $episodeNode->getElementsByTagName('id')->item(0)->textContent,
+                                'title' => $episodeNode->getElementsByTagName('EpisodeName')->item(0)->textContent,
+                                'season' => $episodeNode->getElementsByTagName('SeasonNumber')->item(0)->textContent,
+                                'episode' => $episodeNode->getElementsByTagName('EpisodeNumber')->item(0)->textContent,
+                            )
+                        );
+                    },
+                    $this->queryXPath($showData, '//Episode')
+                ),
+                function (Episode $episode) {
+                    return $episode->season > 0;
+                }
+            )
+        );
     }
 
     /**
@@ -169,12 +177,17 @@ class TheTVDB extends Provider
         }
 
         $mirrors = new \DOMDocument();
-        $mirrors->loadXml($this->httpClient->request(
-            "GET", "http://www.thetvdb.com/api/" . $this->apiKey . "/mirrors.xml"
-        )->body);
+        $mirrors->loadXml(
+            $this->httpClient->request(
+                "GET",
+                "http://www.thetvdb.com/api/" . $this->apiKey . "/mirrors.xml"
+            )->body
+        );
 
         $mirrorsXPath = new \DOMXPath($mirrors);
-        $mirrors = $mirrorsXPath->query('//Mirror/typemask[text() = "1" or text() = "3" or text() = "7"]/parent::*/mirrorpath');
+        $mirrors = $mirrorsXPath->query(
+            '//Mirror/typemask[text() = "1" or text() = "3" or text() = "7"]/parent::*/mirrorpath'
+        );
         $this->mirror = $mirrors->item(mt_rand(0, $mirrors->length - 1))->textContent;
         return $this->mirror;
     }

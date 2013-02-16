@@ -87,8 +87,7 @@ class Eztv extends Provider implements Provider\Torrents
     {
         $allShows = $this->getAllShows();
         $shows = array();
-        foreach ($showNames as $showName)
-        {
+        foreach ($showNames as $showName) {
             $showDistances = array_map(
                 function ($name) use ($showName) {
                     return levenshtein($name, $showName);
@@ -100,14 +99,17 @@ class Eztv extends Provider implements Provider\Torrents
 
             if (reset($showDistances) > 2) {
                 throw new \OutOfRangeException(
-                    "Show $showName not found; Closest matches: " . implode(", ", array_slice(array_keys($showDistances), 0, 10))
+                    "Show $showName not found; Closest matches: " .
+                    implode(", ", array_slice(array_keys($showDistances), 0, 10))
                 );
             }
 
-            $shows[] = new Show(array(
-                'name' => $showName,
-                'internalId' => key($showDistances),
-            ));
+            $shows[] = new Show(
+                array(
+                    'name' => $showName,
+                    'internalId' => key($showDistances),
+                )
+            );
         }
 
         return $shows;
@@ -133,9 +135,11 @@ class Eztv extends Provider implements Provider\Torrents
 
             $torrentLinks = $xpath->query('.//a[contains(@class, "download")]', $episodeBlock);
             for ($j = 0; $j < $torrentLinks->length; ++$j) {
-                $episode->torrents[] = new Torrent(array(
-                    'url' => $torrentLinks->item($j)->getAttribute('href'),
-                ));
+                $episode->torrents[] = new Torrent(
+                    array(
+                        'url' => $torrentLinks->item($j)->getAttribute('href'),
+                    )
+                );
             }
         }
         return array_reverse($episodes);
