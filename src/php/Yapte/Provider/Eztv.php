@@ -153,6 +153,6 @@ class Eztv extends Provider implements Provider\Torrents
      */
     public function getTorrentList(Episode $episode)
     {
-        throw new \RuntimeException("@TODO: Implement.");
+        return $episode->torrents;
     }
 }
