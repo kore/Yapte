@@ -7,7 +7,7 @@
 
 namespace Yapte\Provider;
 
-require __DIR__ . '/TestCase.php';
+require_once __DIR__ . '/TestCase.php';
 
 /**
  * Tests for the Eztv provider
