@@ -124,13 +124,14 @@ class Eztv extends Provider implements Provider\Torrents
         $xpath = new \DOMXPath($html);
 
         $episodes = array();
-        $episodeLinks = $xpath->query('//a[@class="epinfo"]');
-        for ($i = 0; $i < $episodeLinks->length; ++$i) {
-            $title = $episodeLinks->item($i)->getAttribute('title');
+        $episodeBlocks = $xpath->query('//a[@class="epinfo"]/ancestor::tr[@class = "forum_header_border"]');
+        for ($i = 0; $i < $episodeBlocks->length; ++$i) {
+            $episodeBlock = $episodeBlocks->item($i);
+            $title = $xpath->query('.//a[@class="epinfo"]', $episodeBlock)->item(0)->textContent;
 
             $episodes[] = $episode = $this->nameMatcher->parse($title);
 
-            $torrentLinks = $xpath->query('/../..//a[contains(@class, "download_")]');
+            $torrentLinks = $xpath->query('.//a[contains(@class, "download")]', $episodeBlock);
             for ($j = 0; $j < $torrentLinks->length; ++$j) {
                 $episode->torrents[] = new Torrent(array(
                     'url' => $torrentLinks->item($j)->getAttribute('href'),
