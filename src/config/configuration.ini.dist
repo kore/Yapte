@@ -6,7 +6,13 @@
 ;thetvdb.apiKey = 
 
 ; List of shows, you want to follow
-shows[] = 
+;shows[] = 
 
 ; Language for show titles, etc.
 language = en
+
+[staging]
+
+[testing]
+
+[development]
