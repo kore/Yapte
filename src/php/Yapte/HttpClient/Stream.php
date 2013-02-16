@@ -22,11 +22,13 @@ class Stream extends HttpClient
      * @var array
      */
     protected $defaults = array(
-        'scheme' => 'http',
-        'host'   => null,
-        'port'   => null,
-        'user'   => null,
-        'pass'   => null,
+        'scheme'   => 'http',
+        'host'     => null,
+        'port'     => null,
+        'user'     => null,
+        'pass'     => null,
+        'query'    => null,
+        'fragment' => null,
     );
 
     /**
@@ -142,6 +144,8 @@ class Stream extends HttpClient
             $this->server .= ':' . $urlInfo['port'];
         }
         $url .= $urlInfo['path'];
+        $url .= $urlInfo['query'] ? '?' . $urlInfo['query'] : '';
+        $url .= $urlInfo['fragment'] ? '#' . $urlInfo['fragment'] : '';
         return $url;
     }
 
