@@ -9,13 +9,12 @@ namespace Yapte\Provider;
 
 use Yapte\HttpClient;
 
+require_once __DIR__ . '/../TestCase.php';
+
 /**
- * Tests for the Eztv provider
- *
- * @covers \Yapte\Provider\Eztv
- * @group unittest
+ * Base test case for providers
  */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \Yapte\TestCase
 {
     /**
      * Get test HTTP Client

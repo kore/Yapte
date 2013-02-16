@@ -7,7 +7,7 @@
 
 namespace Yapte;
 
-use Yapte\HttpClient;
+use Yapte\Configuration;
 
 /**
  * Base test case
@@ -21,6 +21,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getTestConfiguration()
     {
-        return array();
+        $configuration = new Configuration(__DIR__ . '/../../../src/config/configuration.ini', 'testing');
+        return $configuration;
     }
 }
