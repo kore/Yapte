@@ -17,13 +17,17 @@ require_once __DIR__ . '/TestCase.php';
  */
 class TheTVDBTest extends TestCase
 {
-    public function testGetShowListSingleItem()
+    protected function getProvider()
     {
-        $provider = new TheTVDB(
+        return new TheTVDB(
             $this->getHttpClient(),
             $this->getTestConfiguration()->thetvdb['apiKey']
         );
+    }
 
+    public function testGetShowListSingleItem()
+    {
+        $provider = $this->getProvider();
         $shows = $provider->getShowList(array('The Mentalist'));
 
         $this->assertEquals(
@@ -40,11 +44,7 @@ class TheTVDBTest extends TestCase
 
     public function testGetShowInvalidCase()
     {
-        $provider = new TheTVDB(
-            $this->getHttpClient(),
-            $this->getTestConfiguration()->thetvdb['apiKey']
-        );
-
+        $provider = $this->getProvider();
         $shows = $provider->getShowList(array('the mentalist'));
 
         $this->assertEquals(
@@ -61,11 +61,7 @@ class TheTVDBTest extends TestCase
 
     public function testGetMultipleShows()
     {
-        $provider = new TheTVDB(
-            $this->getHttpClient(),
-            $this->getTestConfiguration()->thetvdb['apiKey']
-        );
-
+        $provider = $this->getProvider();
         $shows = $provider->getShowList(array('The Mentalist', 'House'));
 
         $this->assertEquals(
@@ -89,11 +85,7 @@ class TheTVDBTest extends TestCase
      */
     public function testGetShowVagueName()
     {
-        $provider = new TheTVDB(
-            $this->getHttpClient(),
-            $this->getTestConfiguration()->thetvdb['apiKey']
-        );
-
+        $provider = $this->getProvider();
         $provider->getShowList(array('The'));
     }
 
@@ -102,10 +94,7 @@ class TheTVDBTest extends TestCase
      */
     public function testGetEpisodes($shows)
     {
-        $provider = new TheTVDB(
-            $this->getHttpClient(),
-            $this->getTestConfiguration()->thetvdb['apiKey']
-        );
+        $provider = $this->getProvider();
         $episodes = $provider->getEpisodeList($shows[0]);
 
         $this->assertTrue(is_array($episodes));
