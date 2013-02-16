@@ -158,17 +158,6 @@ class TheTVDB extends Provider
     }
 
     /**
-     * Get torrents for episode
-     *
-     * @param Episode $episode
-     * @return Torrent[]
-     */
-    public function getTorrentList(Episode $episode)
-    {
-        throw new \RuntimeException("@TODO: Implement.");
-    }
-
-    /**
      * Get mirror to use
      *
      * @return string

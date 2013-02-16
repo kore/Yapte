@@ -15,7 +15,7 @@ use Yapte\HttpClient;
  *
  * @version $Revision$
  */
-class Eztv extends Provider
+class Eztv extends Provider implements Provider\Torrents
 {
     /**
      * HTTP Client
