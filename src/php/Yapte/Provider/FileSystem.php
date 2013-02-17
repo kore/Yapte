@@ -90,16 +90,19 @@ class FileSystem extends Provider
 
                     return $episode;
                 },
-                iterator_to_array(
-                    new \RecursiveIteratorIterator(
-                        new \RecursiveDirectoryIterator(
-                            $show->internalId,
-                            \FilesystemIterator::KEY_AS_PATHNAME |
-                            \FilesystemIterator::SKIP_DOTS |
-                            \FilesystemIterator::UNIX_PATHS
-                        ),
-                        \RecursiveIteratorIterator::LEAVES_ONLY
-                    )
+                array_filter(
+                    iterator_to_array(
+                        new \RecursiveIteratorIterator(
+                            new \RecursiveDirectoryIterator(
+                                $show->internalId,
+                                \FilesystemIterator::KEY_AS_PATHNAME |
+                                \FilesystemIterator::SKIP_DOTS |
+                                \FilesystemIterator::UNIX_PATHS
+                            ),
+                            \RecursiveIteratorIterator::LEAVES_ONLY
+                        )
+                    ),
+                    'is_file'
                 )
             )
         );
