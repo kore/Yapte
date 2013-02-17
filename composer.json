@@ -4,14 +4,17 @@
     "minimum-stability": "dev",
     "repositories": [
     ],
-    "require":      {
+    "require": {
+    },
+    "require-dev": {
+        "mikey179/vfsStream": "@stable"
     },
     "autoload": {
         "psr-0": {
             "Yapte": "src/php/"
         }
     },
-    "config":       {
+    "config": {
         "vendor-dir": "src/library"
     }
 }
