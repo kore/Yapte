@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+namespace Yapte;
+
+require __DIR__ . '/../library/autoload.php';
+
+$configuration = new Configuration(__DIR__ . '/../config/configuration.ini');
+
+$httpClient = new HttpClient\Caching(
+    new HttpClient\Stream(),
+    __DIR__ . '/../var/cache/',
+    3600
+);
+
+$nameMatcher = new NameMatcher\RegExp();
+
+$eztvProvider = new Provider\Eztv($httpClient, $nameMatcher);
+$tvdbProvider = new Provider\TheTVDB($httpClient, $configuration->thetvdb['apiKey'], $configuration->language);
+$fileProvider = new Provider\FileSystem($configuration->target, $nameMatcher);
+
+$controller = new Controller();
+$shows = $controller->normalizeShowNames($configuration->shows, $tvdbProvider);
+
+$missing = $controller->getMissing($shows, $fileProvider, $eztvProvider);
+
+var_dump($missing);
+
