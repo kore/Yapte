@@ -85,34 +85,10 @@ class Eztv extends Provider implements Provider\Torrents
      */
     public function getShowList(array $showNames)
     {
-        $allShows = $this->getAllShows();
-        $shows = array();
-        foreach ($showNames as $showName) {
-            $showDistances = array_map(
-                function ($name) use ($showName) {
-                    return levenshtein($name, $showName);
-                },
-                $allShows
-            );
-
-            asort($showDistances, SORT_NUMERIC);
-
-            if (reset($showDistances) > 2) {
-                throw new \OutOfRangeException(
-                    "Show $showName not found; Closest matches: " .
-                    implode(", ", array_slice(array_keys($showDistances), 0, 10))
-                );
-            }
-
-            $shows[] = new Show(
-                array(
-                    'name' => $showName,
-                    'internalId' => key($showDistances),
-                )
-            );
-        }
-
-        return $shows;
+        return $this->filterShows(
+            $this->getAllShows(),
+            $showNames
+        );
     }
 
     /**
