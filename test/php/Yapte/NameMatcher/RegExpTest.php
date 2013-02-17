@@ -41,35 +41,11 @@ class RegExpTest extends TestCase
                 ),
             ),
             array(
-                'Futurama.S07E08.Fun.on.a.Bun.HDTV.x264-FQM.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 7,
-                    'episode' => 8,
-                ),
-            ),
-            array(
-                'House.S08E22.720p.HDTV.x264-DIMENSION.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 8,
-                    'episode' => 22,
-                ),
-            ),
-            array(
                 'How.I.Met.Your.Mother.7x23.(HDTV-x264-LOL)[VTV]',
                 array(
                     'title' => null,
                     'season' => 7,
                     'episode' => 23,
-                ),
-            ),
-            array(
-                'Leverage.S05E04.HDTV.x264-ASAP.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 5,
-                    'episode' => 4,
                 ),
             ),
             array(
@@ -89,14 +65,6 @@ class RegExpTest extends TestCase
                 ),
             ),
             array(
-                'The.Simpsons.S23E21.HDTV.x264-LOL.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 23,
-                    'episode' => 21,
-                ),
-            ),
-            array(
                 'True.Blood.S05E01.REPACK.720p.HDTV.x264-IMMERSE.[eztv]',
                 array(
                     'title' => null,
@@ -105,43 +73,19 @@ class RegExpTest extends TestCase
                 ),
             ),
             array(
-                'True.Blood.S05E01.REPACK.HDTV.x264-ASAP.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 5,
-                    'episode' => 1,
-                ),
-            ),
-            array(
-                'True.Blood.S05E11.HDTV.x264-EVOLVE.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 5,
-                    'episode' => 11,
-                ),
-            ),
-            array(
-                'True.Blood.S05E12.720p.HDTV.x264-EVOLVE.[eztv]',
-                array(
-                    'title' => null,
-                    'season' => 5,
-                    'episode' => 12,
-                ),
-            ),
-            array(
-                'Warehouse.13.4x04.(HDTV-x264-KILLERS)[VTV]',
-                array(
-                    'title' => null,
-                    'season' => 4,
-                    'episode' => 4,
-                ),
-            ),
-            array(
                 'Warehouse.13.S04E02.720p.HDTV.x264-COMPULSiON.[eztv]',
                 array(
                     'title' => null,
                     'season' => 4,
                     'episode' => 2,
+                ),
+            ),
+            array(
+                'The Big Bang Theory - 218 - The Work Song Nanocluster.avi',
+                array(
+                    'title' => null,
+                    'season' => 2,
+                    'episode' => 18,
                 ),
             ),
         );

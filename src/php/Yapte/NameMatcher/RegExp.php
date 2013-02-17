@@ -26,6 +26,7 @@ class RegExp extends NameMatcher
         '(s(?P<season>\\d+)e(?P<episode>\\d+))i',
         '(\\D(?P<season>\\d+)x(?P<episode>\\d+)\\D)i',
         '(\\D(?P<season>\\d+)\\s*of\\s*(?P<episode>\\d+)\\D)i',
+        '(\\D(?P<season>\\d+)(?P<episode>\\d{2})\\D)i',
     );
 
     /**
