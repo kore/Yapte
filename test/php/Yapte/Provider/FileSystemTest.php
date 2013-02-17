@@ -109,13 +109,14 @@ class FileSystemTest extends TestCase
         return $shows;
     }
 
-    /**
-     * @expectedException \OutOfRangeException
-     */
     public function testGetShowVagueName()
     {
         $provider = $this->getProvider();
-        $provider->getShowList(array('The'));
+
+        $this->assertEquals(
+            array(),
+            $provider->getShowList(array('The'))
+        );
     }
 
     /**

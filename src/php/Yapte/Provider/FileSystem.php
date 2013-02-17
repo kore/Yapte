@@ -71,7 +71,9 @@ class FileSystem extends Provider
                     $values
                 )
             ),
-            $showNames
+            $showNames,
+            2,
+            true
         );
     }
 

@@ -29,13 +29,13 @@ abstract class Provider implements Provider\Listing, Provider\Episodes
      * @param int $maxDistance
      * @return Show[]
      */
-    protected function filterShows(array $allShows, array $filter, $maxDistance = 2)
+    protected function filterShows(array $allShows, array $filter, $maxDistance = 2, $skipFailure = false)
     {
         $shows = array();
         foreach ($filter as $showName) {
             $showDistances = array_map(
                 function ($name) use ($showName) {
-                    return levenshtein($name, $showName);
+                    return levenshtein(strtolower($name), strtolower($showName));
                 },
                 $allShows
             );
@@ -43,6 +43,10 @@ abstract class Provider implements Provider\Listing, Provider\Episodes
             asort($showDistances, SORT_NUMERIC);
 
             if (reset($showDistances) > $maxDistance) {
+                if ($skipFailure) {
+                    continue;
+                }
+
                 throw new \OutOfRangeException(
                     "Show $showName not found; Closest matches: " .
                     implode(", ", array_slice(array_keys($showDistances), 0, 10))
