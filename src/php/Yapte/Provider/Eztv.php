@@ -94,6 +94,9 @@ class Eztv extends Provider implements Provider\Torrents
     /**
      * Get epiosode list
      *
+     * @TODO: Merge rows with different variants of the same episode; Extract
+     * metadata from file name
+     *
      * @return Episode[]
      */
     public function getEpisodeList(Show $show)
