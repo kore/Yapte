@@ -8,6 +8,7 @@
 namespace Yapte\Provider;
 
 use Yapte\Provider;
+use Yapte\NameMatcher;
 
 /**
  * Provider based on the file system
@@ -26,14 +27,22 @@ class FileSystem extends Provider
     protected $baseDir;
 
     /**
+     * Name matcher
+     *
+     * @var NameMatcher
+     */
+    protected $nameMatcher;
+
+    /**
      * Construct from dependecies
      *
      * @param string $baseDir
      * @return void
      */
-    public function __construct($baseDir)
+    public function __construct($baseDir, NameMatcher $nameMatcher)
     {
         $this->baseDir = rtrim($baseDir, '/') . '/';
+        $this->nameMatcher = $nameMatcher;
     }
 
     /**
@@ -73,6 +82,26 @@ class FileSystem extends Provider
      */
     public function getEpisodeList(Show $show)
     {
+        return array_values(
+            array_map(
+                function (\SplFileInfo $file) {
+                    $episode = $this->nameMatcher->parse($file->getFilename());
+                    $episode->internalId = $file->getPath() . '/' . $file->getFilename();
 
+                    return $episode;
+                },
+                iterator_to_array(
+                    new \RecursiveIteratorIterator(
+                        new \RecursiveDirectoryIterator(
+                            $show->internalId,
+                            \FilesystemIterator::KEY_AS_PATHNAME |
+                            \FilesystemIterator::SKIP_DOTS |
+                            \FilesystemIterator::UNIX_PATHS
+                        ),
+                        \RecursiveIteratorIterator::LEAVES_ONLY
+                    )
+                )
+            )
+        );
     }
 }

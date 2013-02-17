@@ -9,6 +9,8 @@ namespace Yapte\Provider;
 
 use org\bovigo\vfs\vfsStream;
 
+use Yapte\NameMatcher;
+
 require_once __DIR__ . '/TestCase.php';
 
 /**
@@ -28,8 +30,8 @@ class FileSystemTest extends TestCase
         'House/Season 6/House [6x12] Moving the Chains.avi',
         'House/Season 6/House [6x15] Black Hole.avi',
         'The Mentalist/Season 3/The Mentalist [3x07] Red Hot .avi',
-        'The Mentalist/Season 3/The Mentalist [3x22] Rhapsody in Red.avi',
         'The Mentalist/Season 3/The Mentalist [3x12] Bloodhounds.avi',
+        'The Mentalist/Season 3/The Mentalist [3x22] Rhapsody in Red.avi',
     );
 
     protected function getProvider()
@@ -46,7 +48,10 @@ class FileSystemTest extends TestCase
             touch($fileName);
         }
 
-        return new FileSystem($basedir);
+        return new FileSystem(
+            $basedir,
+            new NameMatcher\RegExp()
+        );
     }
 
     public function testGetShowListSingleItem()
@@ -151,9 +156,8 @@ class FileSystemTest extends TestCase
     public function getEpisodeValues()
     {
         return array(
-            array('title', 'Pilot'),
-            array('season', 1),
-            array('episode', 1),
+            array('season', 3),
+            array('episode', 7),
         );
     }
 
