@@ -6,8 +6,7 @@
          processIsolation="false"
          stopOnFailure="false"
          bootstrap="src/library/autoload.php"
-         syntaxCheck="false"
-         strict="true">
+         syntaxCheck="false">
 
   <testsuites>
     <testsuite name="Tests">
