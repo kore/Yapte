@@ -41,7 +41,7 @@ class Controller
      * @param string[] $shows
      * @param Provider $local
      * @param Provider\Torrents $remote
-     * @return Episode[]
+     * @return Provider\Episode[]
      */
     public function getMissing(array $shows, Provider $local, Provider\Torrents $remote)
     {
@@ -65,6 +65,38 @@ class Controller
     }
 
     /**
+     * Downloads missing torrents to target directory
+     *
+     * @param Provider\Episode[] $missing
+     * @param string $target
+     * @return void
+     */
+    public function downloadTorrents(array $missing, $target)
+    {
+        foreach ($missing as $episode) {
+            usort(
+                $episode->torrents,
+                function ($a, $b) {
+                    return $a->metaData->version - $b->metaData->version ?:
+                        $a->metaData->quality - $b->metaData->quality;
+                }
+            );
+
+            foreach ($episode->torrents as $torrent) {
+                $targetFile = $target . '/' . $episode->internalId . '.torrent';
+                if (@copy($torrent->url, $targetFile)) {
+                    if (strpos(file_get_contents($targetFile), ':announce') === false) {
+                        unlink($targetFile);
+                        continue;
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * Build index of available shows, seasons and episodes
      *
      * @param Provider $provider
@@ -79,6 +111,12 @@ class Controller
             $show->episodes = $provider->getEpisodeList($show);
 
             foreach ($show->episodes as $episode) {
+                $episode->internalId = sprintf(
+                    "%s %dx%02d",
+                    $show->name,
+                    $episode->season,
+                    $episode->episode
+                );
                 $index[$show->name][$episode->season][$episode->episode] = $episode;
             }
         }

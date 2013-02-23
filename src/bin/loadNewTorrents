@@ -14,8 +14,9 @@ $httpClient = new HttpClient\Caching(
 );
 
 $nameMatcher = new NameMatcher\RegExp();
+$metaDataExtractor = new MetaDataExtractor\RegExp();
 
-$eztvProvider = new Provider\Eztv($httpClient, $nameMatcher);
+$eztvProvider = new Provider\Eztv($httpClient, $nameMatcher, $metaDataExtractor);
 $tvdbProvider = new Provider\TheTVDB($httpClient, $configuration->thetvdb['apiKey'], $configuration->language);
 $fileProvider = new Provider\FileSystem($configuration->target, $nameMatcher);
 
@@ -23,6 +24,5 @@ $controller = new Controller();
 $shows = $controller->normalizeShowNames($configuration->shows, $tvdbProvider);
 
 $missing = $controller->getMissing($shows, $fileProvider, $eztvProvider);
-
-var_dump($missing);
+$controller->downloadTorrents($missing, $configuration->torrents);
 
