@@ -85,26 +85,32 @@ class FileSystem extends Provider
     public function getEpisodeList(Show $show)
     {
         return array_values(
-            array_map(
-                function (\SplFileInfo $file) {
-                    $episode = $this->nameMatcher->parse($file->getFilename());
-                    $episode->internalId = $file->getPath() . '/' . $file->getFilename();
+            array_filter(
+                array_map(
+                    function (\SplFileInfo $file) {
+                        try {
+                            $episode = $this->nameMatcher->parse($file->getFilename());
+                        } catch (\UnexpectedValueException $e) {
+                            return null;
+                        }
 
-                    return $episode;
-                },
-                array_filter(
-                    iterator_to_array(
-                        new \RecursiveIteratorIterator(
-                            new \RecursiveDirectoryIterator(
-                                $show->internalId,
-                                \FilesystemIterator::KEY_AS_PATHNAME |
-                                \FilesystemIterator::SKIP_DOTS |
-                                \FilesystemIterator::UNIX_PATHS
-                            ),
-                            \RecursiveIteratorIterator::LEAVES_ONLY
-                        )
-                    ),
-                    'is_file'
+                        $episode->internalId = $file->getPath() . '/' . $file->getFilename();
+                        return $episode;
+                    },
+                    array_filter(
+                        iterator_to_array(
+                            new \RecursiveIteratorIterator(
+                                new \RecursiveDirectoryIterator(
+                                    $show->internalId,
+                                    \FilesystemIterator::KEY_AS_PATHNAME |
+                                    \FilesystemIterator::SKIP_DOTS |
+                                    \FilesystemIterator::UNIX_PATHS
+                                ),
+                                \RecursiveIteratorIterator::LEAVES_ONLY
+                            )
+                        ),
+                        'is_file'
+                    )
                 )
             )
         );

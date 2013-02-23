@@ -32,6 +32,7 @@ class FileSystemTest extends TestCase
         'The Mentalist/Season 3/The Mentalist [3x07] Red Hot .avi',
         'The Mentalist/Season 3/The Mentalist [3x12] Bloodhounds.avi',
         'The Mentalist/Season 3/The Mentalist [3x22] Rhapsody in Red.avi',
+        'The Mentalist/Season 3/readme.txt',
     );
 
     protected function getProvider()

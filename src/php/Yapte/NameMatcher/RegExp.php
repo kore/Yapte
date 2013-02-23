@@ -51,7 +51,7 @@ class RegExp extends NameMatcher
         }
 
         if (!$episode) {
-            throw new \RuntimeException("Could not parse '$string'.");
+            throw new \UnexpectedValueException("Could not parse '$string'.");
         }
 
         return $episode;
