@@ -94,8 +94,7 @@ class Eztv extends Provider implements Provider\Torrents
     /**
      * Get epiosode list
      *
-     * @TODO: Merge rows with different variants of the same episode; Extract
-     * metadata from file name
+     * @TODO: Extract metadata from file name
      *
      * @return Episode[]
      */
@@ -104,13 +103,19 @@ class Eztv extends Provider implements Provider\Torrents
         $html = $this->getDomDocument($show->internalId);
         $xpath = new \DOMXPath($html);
 
-        $episodes = array();
+        $episodeIndex = array();
         $episodeBlocks = $xpath->query('//a[@class="epinfo"]/ancestor::tr[@class = "forum_header_border"]');
         for ($i = 0; $i < $episodeBlocks->length; ++$i) {
             $episodeBlock = $episodeBlocks->item($i);
             $title = $xpath->query('.//a[@class="epinfo"]', $episodeBlock)->item(0)->textContent;
 
-            $episodes[] = $episode = $this->nameMatcher->parse($title);
+            $episode = $this->nameMatcher->parse($title);
+            $index = $episode->season . '_' . $episode->episode;
+            if (isset($episodeIndex[$index])) {
+                $episode = $episodeIndex[$index];
+            } else {
+                $episodeIndex[$index] = $episode;
+            }
 
             $torrentLinks = $xpath->query('.//a[contains(@class, "download")]', $episodeBlock);
             for ($j = 0; $j < $torrentLinks->length; ++$j) {
@@ -121,7 +126,7 @@ class Eztv extends Provider implements Provider\Torrents
                 );
             }
         }
-        return array_reverse($episodes);
+        return array_values(array_reverse($episodeIndex));
     }
 
     /**
