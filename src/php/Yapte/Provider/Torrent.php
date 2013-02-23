@@ -22,4 +22,11 @@ class Torrent extends Struct
      * @var string
      */
     public $url;
+
+    /**
+     * Torrent meta data
+     *
+     * @var MetaData
+     */
+    public $metaData;
 }

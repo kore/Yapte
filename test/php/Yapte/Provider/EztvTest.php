@@ -8,6 +8,7 @@
 namespace Yapte\Provider;
 
 use Yapte\NameMatcher;
+use Yapte\MetaDataExtractor;
 
 require_once __DIR__ . '/TestCase.php';
 
@@ -23,7 +24,8 @@ class EztvTest extends TestCase
     {
         return new Eztv(
             $this->getHttpClient(),
-            new NameMatcher\RegExp()
+            new NameMatcher\RegExp(),
+            new MetaDataExtractor\RegExp()
         );
     }
 

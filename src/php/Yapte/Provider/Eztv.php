@@ -10,6 +10,7 @@ namespace Yapte\Provider;
 use Yapte\Provider;
 use Yapte\HttpClient;
 use Yapte\NameMatcher;
+use Yapte\MetaDataExtractor;
 
 /**
  * Provider based on eztv.it
@@ -33,15 +34,25 @@ class Eztv extends Provider implements Provider\Torrents
     protected $nameMatcher;
 
     /**
+     * Meta data extractor
+     *
+     * @var MetaDataExtractor
+     */
+    protected $metaDataExtractor;
+
+    /**
      * Construct from dependecies
      *
      * @param HttpClient $httpClient
+     * @param NameMatcher $nameMatcher
+     * @param MetaDataExtractor $metaDataExtractor
      * @return void
      */
-    public function __construct(HttpClient $httpClient, NameMatcher $nameMatcher)
+    public function __construct(HttpClient $httpClient, NameMatcher $nameMatcher, MetaDataExtractor $metaDataExtractor)
     {
         $this->httpClient = $httpClient;
         $this->nameMatcher = $nameMatcher;
+        $this->metaDataExtractor = $metaDataExtractor;
     }
 
     protected function getDomDocument($url)
@@ -94,8 +105,6 @@ class Eztv extends Provider implements Provider\Torrents
     /**
      * Get epiosode list
      *
-     * @TODO: Extract metadata from file name
-     *
      * @return Episode[]
      */
     public function getEpisodeList(Show $show)
@@ -118,10 +127,12 @@ class Eztv extends Provider implements Provider\Torrents
             }
 
             $torrentLinks = $xpath->query('.//a[contains(@class, "download")]', $episodeBlock);
+            $torrentMetaData = $this->metaDataExtractor->getMetaData($title);
             for ($j = 0; $j < $torrentLinks->length; ++$j) {
                 $episode->torrents[] = new Torrent(
                     array(
                         'url' => $torrentLinks->item($j)->getAttribute('href'),
+                        'metaData' => $torrentMetaData,
                     )
                 );
             }
