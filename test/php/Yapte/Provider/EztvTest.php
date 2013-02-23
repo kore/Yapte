@@ -81,7 +81,6 @@ class EztvTest extends TestCase
     {
         $provider = $this->getProvider();
         $episodes = $provider->getEpisodeList($shows[0]);
-        var_dump($episodes);
 
         $this->assertTrue(is_array($episodes));
         return $episodes;
