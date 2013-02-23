@@ -8,6 +8,12 @@ thetvdb.apiKey =
 ; Target directory
 target = /path/to/local/dir
 
+; Torrent target directory
+torrents = /path/to/local/dir
+
+; Downloads directory
+downloads = /path/to/local/dir
+
 ; List of shows, you want to follow
 shows[] = "Something"
 shows[] = "Something Else"
