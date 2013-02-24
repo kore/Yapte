@@ -172,8 +172,7 @@ class Controller
                     mkdir($dirName, 0777, true);
                 }
 
-                echo "-> $fileName", PHP_EOL;
-                // rename($episode->internalId, $fileName);
+                rename($episode->internalId, $fileName);
             }
         }
     }
