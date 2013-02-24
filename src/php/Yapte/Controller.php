@@ -65,6 +65,34 @@ class Controller
     }
 
     /**
+     * Build index of available shows, seasons and episodes
+     *
+     * @param Provider $provider
+     * @param Show[] $shows
+     * @return array
+     */
+    protected function buildIndex(Provider $provider, array $shows)
+    {
+        $index = array();
+        $shows = $provider->getShowList($shows);
+        foreach ($shows as $show) {
+            $show->episodes = $provider->getEpisodeList($show);
+
+            foreach ($show->episodes as $episode) {
+                $episode->internalId = sprintf(
+                    "%s %dx%02d",
+                    $show->name,
+                    $episode->season,
+                    $episode->episode
+                );
+                $index[$show->name][$episode->season][$episode->episode] = $episode;
+            }
+        }
+
+        return $index;
+    }
+
+    /**
      * Downloads missing torrents to target directory
      *
      * @param Provider\Episode[] $missing
@@ -94,33 +122,5 @@ class Controller
                 }
             }
         }
-    }
-
-    /**
-     * Build index of available shows, seasons and episodes
-     *
-     * @param Provider $provider
-     * @param Show[] $shows
-     * @return array
-     */
-    protected function buildIndex(Provider $provider, array $shows)
-    {
-        $index = array();
-        $shows = $provider->getShowList($shows);
-        foreach ($shows as $show) {
-            $show->episodes = $provider->getEpisodeList($show);
-
-            foreach ($show->episodes as $episode) {
-                $episode->internalId = sprintf(
-                    "%s %dx%02d",
-                    $show->name,
-                    $episode->season,
-                    $episode->episode
-                );
-                $index[$show->name][$episode->season][$episode->episode] = $episode;
-            }
-        }
-
-        return $index;
     }
 }
