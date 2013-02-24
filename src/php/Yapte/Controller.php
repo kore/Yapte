@@ -8,6 +8,7 @@
 namespace Yapte;
 
 use Yapte\Provider\Show;
+use Yapte\Provider\Episode;
 
 /**
  * Basic HTTP client
@@ -122,5 +123,96 @@ class Controller
                 }
             }
         }
+    }
+
+    /**
+     * Rename files from source provider
+     *
+     * Files are moved to the $target directory, unsing the defined pattern as
+     * a file / directory name. Strings wrapped in {} are replaced. Currently
+     * the following replacements are known:
+     *
+     * * showTitle
+     * * showAbbr
+     * * seasonNo
+     * * episodeNo
+     * * episodeTitle
+     *
+     * @param array $shows
+     * @param Provider\FileSystem $source
+     * @param string $target
+     * @param string $pattern
+     * @return void
+     */
+    public function fixFileNames(
+        array $shows,
+        Provider\FileSystem $source,
+        Provider $naming,
+        $target,
+        $pattern = "{showTitle}/Season {seasonNo}/{showAbbr} {seasonNo}x{episodeNo} - {episodeTitle}"
+    ) {
+        $showData = $this->buildIndex($naming, $shows);
+        foreach ($source->getShowList($shows) as $show) {
+            $show->episodes = $source->getEpisodeList($show);
+            foreach ($show->episodes as $episode) {
+                if (!isset($showData[$show->name]) ||
+                    !isset($showData[$show->name][$episode->season]) ||
+                    !isset($showData[$show->name][$episode->season][$episode->episode])) {
+                    continue;
+                }
+
+                $fileName = $target . '/' . $this->applyNamePattern(
+                    $pattern,
+                    $show,
+                    $showData[$show->name][$episode->season][$episode->episode]
+                ) . '.' . pathinfo($episode->internalId, \PATHINFO_EXTENSION);
+
+                $dirName = dirname($fileName);
+                if (!is_dir($dirName)) {
+                    mkdir($dirName, 0777, true);
+                }
+
+                echo "-> $fileName", PHP_EOL;
+                // rename($episode->internalId, $fileName);
+            }
+        }
+    }
+
+    /**
+     * Apply name pattern
+     *
+     * Strings wrapped in {} are replaced. Currently the following replacements
+     * are known:
+     *
+     * * showTitle
+     * * showAbbr
+     * * seasonNo
+     * * episodeNo
+     * * episodeTitle
+     *
+     * @param string $pattern
+     * @param Show $show
+     * @param Episode $episode
+     * @return string
+     */
+    protected function applyNamePattern($pattern, Show $show, Episode $episode)
+    {
+        return str_replace(
+            array(
+                '{showTitle}',
+                '{showAbbr}',
+                '{seasonNo}',
+                '{episodeNo}',
+                '{episodeTitle}',
+            ),
+            array(
+                $show->name,
+                preg_replace('((\\S)\\S*\\s*)', '\\1', $show->name),
+                $episode->season,
+                sprintf("%02d", $episode->episode),
+                $episode->title,
+            ),
+            $pattern
+        );
     }
 }
