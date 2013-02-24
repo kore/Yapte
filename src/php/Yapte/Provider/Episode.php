@@ -12,6 +12,8 @@ use Yapte\Struct;
 /**
  * Provider base class
  *
+ * @TODO: Split in file and episode structs?
+ *
  * @version $Revision$
  */
 class Episode extends Struct
@@ -50,4 +52,11 @@ class Episode extends Struct
      * @var Torrent[]
      */
     public $torrents = array();
+
+    /**
+     * File name
+     *
+     * @var string
+     */
+    public $file = null;
 }

@@ -100,6 +100,7 @@ class Downloads extends Provider
                     function ($file) {
                         $episode = $this->nameMatcher->parse($file);
                         $episode->internalId = $file;
+                        $episode->file = $file;
                         return $episode;
                     },
                     $show->internalId

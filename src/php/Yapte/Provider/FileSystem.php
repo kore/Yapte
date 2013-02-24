@@ -94,7 +94,8 @@ class FileSystem extends Provider
                             return null;
                         }
 
-                        $episode->internalId = $file->getPath() . '/' . $file->getFilename();
+                        $episode->file = $file->getPath() . '/' . $file->getFilename();
+                        $episode->internalId = $episode->file;
                         return $episode;
                     },
                     array_filter(
