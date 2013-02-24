@@ -146,7 +146,7 @@ class Controller
      */
     public function fixFileNames(
         array $shows,
-        Provider\FileSystem $source,
+        Provider $source,
         Provider $naming,
         $target,
         $pattern = "{showTitle}/Season {seasonNo}/{showAbbr} {seasonNo}x{episodeNo} - {episodeTitle}"
@@ -155,7 +155,8 @@ class Controller
         foreach ($source->getShowList($shows) as $show) {
             $show->episodes = $source->getEpisodeList($show);
             foreach ($show->episodes as $episode) {
-                if (!isset($showData[$show->name]) ||
+                if (!$episode->file ||
+                    !isset($showData[$show->name]) ||
                     !isset($showData[$show->name][$episode->season]) ||
                     !isset($showData[$show->name][$episode->season][$episode->episode])) {
                     continue;
