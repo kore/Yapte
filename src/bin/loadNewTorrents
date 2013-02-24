@@ -7,14 +7,13 @@ require __DIR__ . '/../library/autoload.php';
 
 $configuration = new Configuration(__DIR__ . '/../config/configuration.ini');
 
+$nameMatcher = new NameMatcher\RegExp();
+$metaDataExtractor = new MetaDataExtractor\RegExp();
 $httpClient = new HttpClient\Caching(
     new HttpClient\Stream(),
     __DIR__ . '/../var/cache/',
     3600
 );
-
-$nameMatcher = new NameMatcher\RegExp();
-$metaDataExtractor = new MetaDataExtractor\RegExp();
 
 $eztvProvider = new Provider\Eztv($httpClient, $nameMatcher, $metaDataExtractor);
 $tvdbProvider = new Provider\TheTVDB($httpClient, $configuration->thetvdb['apiKey'], $configuration->language);
